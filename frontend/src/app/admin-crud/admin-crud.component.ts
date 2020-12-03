@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { HttpService } from '../http.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
     selector: 'app-admin-crud',
@@ -35,7 +38,10 @@ export class AdminCRUDComponent implements OnInit {
   imageChangedEvent: any = ""
   imageBase64
 
-  constructor(private _http: HttpService, private fb: FormBuilder) {}
+  constructor(private _http: HttpService, 
+    public dialog: MatDialog,
+    private router: Router,
+    private fb: FormBuilder) {}
 
   ngOnInit() {
     this.updateVendor();
@@ -92,6 +98,18 @@ export class AdminCRUDComponent implements OnInit {
           this.vendorData.description = VendorData.description;
           this.vendorData.shop_picture = this.imageBase64;
           this.showEditVendorForm = false;
+
+          const dialogRef = this.dialog.open(DialogComponent, {
+            data: "I tuoi dati sono stati modificati con successo"
+          });
+          dialogRef.afterClosed().subscribe(result => {
+            if(result == true){
+              this.router.navigate(['/admin'])
+              .then(() => {
+                window.location.reload();
+              });
+            }
+          })
         } else {
           this.errorVendorEdit = true;
         }

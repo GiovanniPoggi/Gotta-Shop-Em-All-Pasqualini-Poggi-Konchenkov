@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { HttpService } from '../http.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-vendor-action',
@@ -53,7 +56,10 @@ export class VendorActionComponent implements OnInit {
     { name: "Altro", value: 10 }
   ]
 
-  constructor(private _http: HttpService, private fb: FormBuilder) {}
+  constructor(private _http: HttpService, 
+    public dialog: MatDialog,
+    private router: Router,
+    private fb: FormBuilder) {}
 
   ngOnInit() {
     this.updateVendor();
@@ -106,6 +112,17 @@ export class VendorActionComponent implements OnInit {
         this.productCreated = true;
         ProductData._id = data['body']['_id'];
         this.productData.push(ProductData);
+        const dialogRef = this.dialog.open(DialogComponent, {
+          data: "Il prodotto è stato aggiunto alla tua lista di prodotti con successo"
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if(result == true){
+            this.router.navigate(['/vendor-action'])
+            .then(() => {
+              window.location.reload();
+            });
+          }
+        })
       } else {
         this.errorProductCreated = true;
       }

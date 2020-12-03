@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { HttpService } from '../http.service';
 import { WebSocketService } from '../web-socket.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-vendor-adv',
@@ -30,7 +33,11 @@ export class VendorAdvComponent implements OnInit {
   base64Image = null;
   base64ImageCreate = null;
 
-  constructor(private _http: HttpService, private socket: WebSocketService, private fb: FormBuilder) {}
+  constructor(private _http: HttpService, 
+    private socket: WebSocketService, 
+    public dialog: MatDialog,
+    private router: Router,
+    private fb: FormBuilder) {}
 
   ngOnInit() {
     this.updateVendor();
@@ -55,6 +62,17 @@ export class VendorAdvComponent implements OnInit {
   //Method to Create Adv
   createAdv(event, advForm) {
     const AdvData = advForm.value;
-    this.socket.emit("new_advertisement", {title: AdvData.title, body: AdvData.body, admin_id: this.vendorId}); 
+    this.socket.emit("new_advertisement", {title: AdvData.title, body: AdvData.body, admin_id: this.vendorId});       
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: "L'annuncio è stato creato correttamente"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result == true){
+        this.router.navigate(['/vendor-adv'])
+        .then(() => {
+          window.location.reload();
+        });
+      }
+    })
   }
 }

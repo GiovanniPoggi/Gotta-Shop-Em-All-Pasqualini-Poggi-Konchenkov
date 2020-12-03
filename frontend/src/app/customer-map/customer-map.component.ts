@@ -33,6 +33,23 @@ export class CustomerMapComponent implements OnInit {
       this.marker = L.marker(delivery_pos).addTo(this.myMap)
         .bindPopup("Posizione corrente del corriere").openPopup();
     })
+
+    locate()
+    // wrap map.locate in a function    
+    function locate() {
+      this.myMap.locate({setView: false, maxZoom: 8});
+    }
+    //finds the users current location if the GPS is avaliable
+    this.myMap.on('locationfound', e =>{
+       L.marker(e.latlng).addTo(this.myMap)
+        .bindPopup("Questa è la tua posizione").openPopup();
+    });
+
+    //Error message if GPS is unavaliable 
+    this.myMap.on('locationerror', e => {
+      alert(e.message);
+    });
+
   }
 
   refreshPosition(){
