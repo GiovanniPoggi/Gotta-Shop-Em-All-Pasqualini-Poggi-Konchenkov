@@ -17,21 +17,16 @@ git clone https://github.com/GiovanniPoggi/Gotta-Shop-Em-All-Pasqualini-Poggi-Ko
 
 ```
 cd progettoweb-elia-oleg-giovanni
-cd frontend
-npm install
-```
-
-# Backend Set Up
-
-```
-cd progettoweb-elia-oleg-giovanni
 docker-compose build
 ```
 
 # MongoDB Set Up
 
 ```
-mongoimport --collection NAMEFILE --db mapsage .\NAMEFILE.json
+docker ps -a (Per reperire le informazioni dai Container Docker presenti e quindi per poter visualizzare il nome del container del Database.)
+docker exec -it "NOMECONTAINERDB" bash
+cd /backup/
+mongorestore /backup/
 ```
 
 # Run Application:
@@ -44,8 +39,10 @@ docker-compose up
 # Technologies and Packages
 
 - Docker
+- Nginx
 - Bootstrap 4
 - Mongoose
+- RabbitMQ
 - BCrypt
 - Json Web Token
 - Leaflet
